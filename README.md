@@ -1,4 +1,4 @@
-# Mi Barco - App de Reservas (PWA)
+# Le Bateau - App de Reservas (PWA)
 
 Esta es la versión v2 lista para subir a **GitHub Pages**.
 
