@@ -1,0 +1,1 @@
+// Aquí iría la lógica completa de la versión v2 con reservas, conflictos, invitaciones y notificaciones
