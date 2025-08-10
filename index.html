@@ -16,8 +16,11 @@
     <p>Reservas entre propietarios</p>
   </header>
   <main>
-    <p>Versión v2 mejorada y lista como PWA para iPhone, iPad y Android.</p>
-    <button onclick="alert('Aquí irá el sistema de reservas')">📅 Nueva reserva</button>
+    <p>Selecciona una fecha para tu reserva:</p>
+    <input type="date" id="fechaReserva" />
+    <button onclick="guardarReserva()">📅 Guardar reserva</button>
+    <h2>Reservas guardadas:</h2>
+    <ul id="listaReservas"></ul>
   </main>
   <script src="app.js"></script>
   <script>
