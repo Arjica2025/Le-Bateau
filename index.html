@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Le Bateau - Reservas</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Mi Barco">
+</head>
+<body>
+  <header>
+    <h1>🚤 Le Bateau</h1>
+    <p>Reservas entre propietarios</p>
+  </header>
+  <main>
+    <p>Versión v2 mejorada y lista como PWA para iPhone, iPad y Android.</p>
+    <button onclick="alert('Aquí irá el sistema de reservas')">📅 Nueva reserva</button>
+  </main>
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+  </script>
+</body>
+</html>
