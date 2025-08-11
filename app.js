@@ -22,17 +22,27 @@ function guardarUsuario() {
 
 function guardarReserva() {
   const fecha = document.getElementById('fechaReserva').value;
+  const hora = document.getElementById('horaReserva').value;
   const usuario = localStorage.getItem('usuario');
-  if (!fecha) {
-    alert('Por favor selecciona una fecha');
+
+  if (!fecha || !hora) {
+    alert('Por favor selecciona fecha y hora');
     return;
   }
+
+  // Validar horario
+  if (hora < "09:00" || hora > "21:00") {
+    alert('Las reservas solo pueden ser entre 09:00 y 21:00');
+    return;
+  }
+
   let reservas = JSON.parse(localStorage.getItem('reservas') || '[]');
-  if (reservas.find(r => r.fecha === fecha)) {
-    alert('Esta fecha ya está reservada');
+  if (reservas.find(r => r.fecha === fecha && r.hora === hora)) {
+    alert('Esta fecha y hora ya están reservadas');
     return;
   }
-  reservas.push({ fecha, usuario });
+
+  reservas.push({ fecha, hora, usuario });
   localStorage.setItem('reservas', JSON.stringify(reservas));
   mostrarReservas();
 }
@@ -44,7 +54,7 @@ function mostrarReservas() {
   const reservas = JSON.parse(localStorage.getItem('reservas') || '[]');
   reservas.forEach((r, index) => {
     const li = document.createElement('li');
-    li.textContent = r.fecha + ' → ' + r.usuario;
+    li.textContent = r.fecha + ' ' + r.hora + ' → ' + r.usuario;
     if (r.usuario === usuario) {
       const btn = document.createElement('button');
       btn.textContent = '❌';
