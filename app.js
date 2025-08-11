@@ -30,7 +30,6 @@ function guardarReserva() {
     return;
   }
 
-  // Validar horario
   if (!validarHorario(horaInicio) || !validarHorario(horaFin)) {
     alert('Las reservas solo pueden ser entre 09:00 y 21:00');
     return;
@@ -43,9 +42,9 @@ function guardarReserva() {
 
   let reservas = JSON.parse(localStorage.getItem('reservas') || '[]');
 
-  // Validar solapamientos
-  if (reservas.find(r => r.fecha === fecha && seSolapan(r.horaInicio, r.horaFin, horaInicio, horaFin))) {
-    alert('Ya existe una reserva que se solapa con este horario');
+  // Solo bloquea si el mismo usuario tiene solapamiento
+  if (reservas.find(r => r.fecha === fecha && r.usuario === usuario && seSolapan(r.horaInicio, r.horaFin, horaInicio, horaFin))) {
+    alert('Ya tienes una reserva que se solapa con este horario');
     return;
   }
 
