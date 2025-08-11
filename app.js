@@ -52,9 +52,16 @@ function mostrarReservas() {
   lista.innerHTML = '';
   const usuario = localStorage.getItem('usuario');
   const reservas = JSON.parse(localStorage.getItem('reservas') || '[]');
+
   reservas.forEach((r, index) => {
+    const fechaObj = new Date(r.fecha + 'T' + r.hora);
+    const fechaFormateada = ('0' + fechaObj.getDate()).slice(-2) + '/' +
+                            ('0' + (fechaObj.getMonth() + 1)).slice(-2) + '/' +
+                            fechaObj.getFullYear() + ' ' +
+                            ('0' + fechaObj.getHours()).slice(-2) + ':' +
+                            ('0' + fechaObj.getMinutes()).slice(-2);
     const li = document.createElement('li');
-    li.textContent = r.fecha + ' ' + r.hora + ' → ' + r.usuario;
+    li.textContent = fechaFormateada + ' → ' + r.usuario;
     if (r.usuario === usuario) {
       const btn = document.createElement('button');
       btn.textContent = '❌';
@@ -72,3 +79,4 @@ function borrarReserva(index) {
   localStorage.setItem('reservas', JSON.stringify(reservas));
   mostrarReservas();
 }
+"""
