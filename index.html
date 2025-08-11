@@ -8,7 +8,7 @@
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Mi Barco">
+  <meta name="apple-mobile-web-app-title" content="Le Bateau">
 </head>
 <body>
   <header>
@@ -16,12 +16,21 @@
     <p>Reservas entre propietarios</p>
   </header>
   <main>
-    <p>Selecciona una fecha para tu reserva:</p>
-    <input type="date" id="fechaReserva" />
-    <button onclick="guardarReserva()">📅 Guardar reserva</button>
-    <h2>Reservas guardadas:</h2>
-    <ul id="listaReservas"></ul>
+    <section id="userSection">
+      <p>Introduce tu nombre para identificar tus reservas:</p>
+      <input type="text" id="nombreUsuario" placeholder="Tu nombre" />
+      <button onclick="guardarUsuario()">Guardar nombre</button>
+    </section>
+
+    <section id="reservaSection" style="display:none;">
+      <p>Selecciona una fecha para tu reserva:</p>
+      <input type="date" id="fechaReserva" />
+      <button onclick="guardarReserva()">📅 Guardar reserva</button>
+      <h2>Reservas guardadas:</h2>
+      <ul id="listaReservas"></ul>
+    </section>
   </main>
+
   <script src="app.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
