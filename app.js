@@ -1,3 +1,10 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { firebaseConfig } from './firebase-config.js';
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 document.addEventListener('DOMContentLoaded', () => {
   const usuario = localStorage.getItem('usuario');
   if (usuario) {
@@ -7,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-function guardarUsuario() {
+window.guardarUsuario = function() {
   const nombre = document.getElementById('nombreUsuario').value.trim();
   if (!nombre) {
     alert('Por favor escribe tu nombre');
@@ -17,82 +24,63 @@ function guardarUsuario() {
   document.getElementById('userSection').style.display = 'none';
   document.getElementById('reservaSection').style.display = 'block';
   mostrarReservas();
-}
+};
 
-function guardarReserva() {
+window.guardarReserva = async function() {
   const fecha = document.getElementById('fechaReserva').value;
   const horaInicio = document.getElementById('horaInicio').value;
   const horaFin = document.getElementById('horaFin').value;
   const usuario = localStorage.getItem('usuario');
 
   if (!fecha || !horaInicio || !horaFin) {
-    alert('Por favor completa fecha, hora de inicio y hora de fin');
+    alert('Por favor completa todos los campos');
     return;
   }
 
-  if (!validarHorario(horaInicio) || !validarHorario(horaFin)) {
-    alert('Las reservas solo pueden ser entre 09:00 y 21:00');
+  if (horaInicio < "09:00" || horaFin > "21:00" || horaInicio >= horaFin) {
+    alert('Horario inválido (09:00-21:00 y fin mayor que inicio)');
     return;
   }
 
-  if (horaInicio >= horaFin) {
-    alert('La hora de inicio debe ser anterior a la hora de fin');
+  const reservasRef = collection(db, 'reservas');
+  const snapshot = await getDocs(reservasRef);
+  const reservas = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+  const solapa = reservas.some(r =>
+    r.fecha === fecha &&
+    ((horaInicio < r.horaFin) && (horaFin > r.horaInicio))
+  );
+
+  if (solapa) {
+    alert('La reserva se solapa con otra existente');
     return;
   }
 
-  let reservas = JSON.parse(localStorage.getItem('reservas') || '[]');
-
-  // Bloquea solo si el mismo usuario tiene solapamiento
-  if (reservas.find(r => r.fecha === fecha && r.usuario === usuario && seSolapan(r.horaInicio, r.horaFin, horaInicio, horaFin))) {
-    alert('Ya tienes una reserva que se solapa con este horario');
-    return;
-  }
-
-  const id = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-  reservas.push({ id, fecha, horaInicio, horaFin, usuario });
-  localStorage.setItem('reservas', JSON.stringify(reservas));
-  mostrarReservas();
-}
-
-function validarHorario(hora) {
-  return hora >= "09:00" && hora <= "21:00";
-}
-
-function seSolapan(inicio1, fin1, inicio2, fin2) {
-  return inicio1 < fin2 && inicio2 < fin1;
-}
+  await addDoc(reservasRef, { fecha, horaInicio, horaFin, usuario });
+};
 
 function mostrarReservas() {
   const lista = document.getElementById('listaReservas');
   lista.innerHTML = '';
   const usuario = localStorage.getItem('usuario');
-  const reservas = JSON.parse(localStorage.getItem('reservas') || '[]')
-    .sort((a, b) => (a.fecha + a.horaInicio).localeCompare(b.fecha + b.horaInicio));
-
-  reservas.forEach(r => {
-    const li = document.createElement('li');
-    li.textContent = `${r.fecha} ${r.horaInicio}–${r.horaFin} → ${r.usuario}`;
-    if (r.usuario === usuario) {
-      const btn = document.createElement('button');
-      btn.textContent = '❌';
-      btn.style.marginLeft = '10px';
-      btn.onclick = () => borrarReserva(r.id);
-      li.appendChild(btn);
-    }
-    lista.appendChild(li);
+  const reservasRef = collection(db, 'reservas');
+  const q = query(reservasRef, orderBy('fecha'), orderBy('horaInicio'));
+  onSnapshot(q, (snapshot) => {
+    lista.innerHTML = '';
+    snapshot.forEach(docSnap => {
+      const r = docSnap.data();
+      const li = document.createElement('li');
+      li.textContent = `${r.fecha} ${r.horaInicio}-${r.horaFin} → ${r.usuario}`;
+      if (r.usuario === usuario) {
+        const btn = document.createElement('button');
+        btn.textContent = '❌';
+        btn.style.marginLeft = '10px';
+        btn.onclick = async () => {
+          await deleteDoc(doc(db, 'reservas', docSnap.id));
+        };
+        li.appendChild(btn);
+      }
+      lista.appendChild(li);
+    });
   });
-}
-
-function borrarReserva(id) {
-  let reservas = JSON.parse(localStorage.getItem('reservas') || '[]');
-  reservas = reservas.filter(r => r.id !== id);
-  localStorage.setItem('reservas', JSON.stringify(reservas));
-  mostrarReservas();
-}
-
-function borrarTodas() {
-  if (confirm("¿Seguro que quieres borrar TODAS las reservas?")) {
-    localStorage.removeItem('reservas');
-    mostrarReservas();
-  }
 }
