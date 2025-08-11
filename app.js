@@ -22,27 +22,17 @@ function guardarUsuario() {
 
 function guardarReserva() {
   const fecha = document.getElementById('fechaReserva').value;
-  const hora = document.getElementById('horaReserva').value;
   const usuario = localStorage.getItem('usuario');
-
-  if (!fecha || !hora) {
-    alert('Por favor selecciona fecha y hora');
+  if (!fecha) {
+    alert('Por favor selecciona una fecha');
     return;
   }
-
-  // Validar horario
-  if (hora < "09:00" || hora > "21:00") {
-    alert('Las reservas solo pueden ser entre 09:00 y 21:00');
-    return;
-  }
-
   let reservas = JSON.parse(localStorage.getItem('reservas') || '[]');
-  if (reservas.find(r => r.fecha === fecha && r.hora === hora)) {
-    alert('Esta fecha y hora ya están reservadas');
+  if (reservas.find(r => r.fecha === fecha)) {
+    alert('Esta fecha ya está reservada');
     return;
   }
-
-  reservas.push({ fecha, hora, usuario });
+  reservas.push({ fecha, usuario });
   localStorage.setItem('reservas', JSON.stringify(reservas));
   mostrarReservas();
 }
@@ -52,16 +42,9 @@ function mostrarReservas() {
   lista.innerHTML = '';
   const usuario = localStorage.getItem('usuario');
   const reservas = JSON.parse(localStorage.getItem('reservas') || '[]');
-
   reservas.forEach((r, index) => {
-    const fechaObj = new Date(r.fecha + 'T' + r.hora);
-    const fechaFormateada = ('0' + fechaObj.getDate()).slice(-2) + '/' +
-                            ('0' + (fechaObj.getMonth() + 1)).slice(-2) + '/' +
-                            fechaObj.getFullYear() + ' ' +
-                            ('0' + fechaObj.getHours()).slice(-2) + ':' +
-                            ('0' + fechaObj.getMinutes()).slice(-2);
     const li = document.createElement('li');
-    li.textContent = fechaFormateada + ' → ' + r.usuario;
+    li.textContent = r.fecha + ' → ' + r.usuario;
     if (r.usuario === usuario) {
       const btn = document.createElement('button');
       btn.textContent = '❌';
@@ -79,4 +62,3 @@ function borrarReserva(index) {
   localStorage.setItem('reservas', JSON.stringify(reservas));
   mostrarReservas();
 }
-"""

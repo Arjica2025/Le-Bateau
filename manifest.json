@@ -1,3 +1,4 @@
+{
   "name": "Le Bateau - Reservas",
   "short_name": "LeBateau",
   "start_url": ".",
@@ -16,4 +17,4 @@
       "type": "image/png"
     }
   ]
-}"""
+}
