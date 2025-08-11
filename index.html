@@ -1,14 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Le Bateau - Reservas</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="styles.css">
   <link rel="manifest" href="manifest.json">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Le Bateau">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#0066cc">
 </head>
 <body>
   <header>
@@ -18,25 +17,19 @@
   <main>
     <section id="userSection">
       <p>Introduce tu nombre para identificar tus reservas:</p>
-      <input type="text" id="nombreUsuario" placeholder="Tu nombre" />
+      <input type="text" id="nombreUsuario" placeholder="Tu nombre">
       <button onclick="guardarUsuario()">Guardar nombre</button>
     </section>
-
     <section id="reservaSection" style="display:none;">
-      <p>Selecciona fecha y hora para tu reserva:</p>
-      <input type="date" id="fechaReserva" />
-      <input type="time" id="horaReserva" min="09:00" max="21:00" step="3600" />
-      <button onclick="guardarReserva()">📅 Guardar reserva</button>
-      <h2>Reservas guardadas:</h2>
+      <h2>Hacer una reserva</h2>
+      <input type="date" id="fechaReserva">
+      <input type="time" id="horaInicio">
+      <input type="time" id="horaFin">
+      <button onclick="guardarReserva()">Guardar reserva</button>
+      <h3>Reservas</h3>
       <ul id="listaReservas"></ul>
     </section>
   </main>
-
   <script src="app.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js');
-    }
-  </script>
 </body>
 </html>
