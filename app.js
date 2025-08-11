@@ -42,7 +42,7 @@ function guardarReserva() {
 
   let reservas = JSON.parse(localStorage.getItem('reservas') || '[]');
 
-  // Solo bloquea si el mismo usuario tiene solapamiento
+  // Bloquea solo si el mismo usuario tiene solapamiento
   if (reservas.find(r => r.fecha === fecha && r.usuario === usuario && seSolapan(r.horaInicio, r.horaFin, horaInicio, horaFin))) {
     alert('Ya tienes una reserva que se solapa con este horario');
     return;
@@ -88,4 +88,11 @@ function borrarReserva(id) {
   reservas = reservas.filter(r => r.id !== id);
   localStorage.setItem('reservas', JSON.stringify(reservas));
   mostrarReservas();
+}
+
+function borrarTodas() {
+  if (confirm("¿Seguro que quieres borrar TODAS las reservas?")) {
+    localStorage.removeItem('reservas');
+    mostrarReservas();
+  }
 }

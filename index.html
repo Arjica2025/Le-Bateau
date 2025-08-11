@@ -6,7 +6,7 @@
   <title>Le Bateau - Reservas</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
   <meta name="theme-color" content="#0066cc">
 </head>
 <body>
@@ -26,6 +26,7 @@
       <input type="time" id="horaInicio">
       <input type="time" id="horaFin">
       <button onclick="guardarReserva()">Guardar reserva</button>
+      <button onclick="borrarTodas()" style="background-color:#cc0000; margin-left:10px;">Borrar todas las reservas</button>
       <h3>Reservas</h3>
       <ul id="listaReservas"></ul>
     </section>
